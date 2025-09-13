@@ -18,6 +18,21 @@
 
 ## Installation
 
+#### Termux (Android)
+
+For Termux users, you'll need to install both Python packages and the Stockfish engine:
+
+```bash
+# Install Python and pip
+pkg install python
+
+# Install Stockfish engine
+pkg install stockfish
+
+# Install chs
+pip install chs
+```
+
 #### Pip
 
 This package is available via PyPi.
@@ -25,6 +40,12 @@ This package is available via PyPi.
 ```
 $ python3 -m pip install chs
 ```
+
+**Note**: On some systems, you may also need to install the Stockfish chess engine separately:
+- **Ubuntu/Debian**: `sudo apt install stockfish`
+- **Fedora**: `sudo dnf install stockfish`  
+- **Arch Linux**: `sudo pacman -S stockfish`
+- **macOS**: `brew install stockfish`
 
 #### Arch Linux
 
@@ -60,6 +81,15 @@ You can also specify the level of the engine if you want to tweak the difficulty
 
 ```
 $ chs --level=8
+```
+
+#### Termux-specific Usage
+
+On Termux, the app will automatically detect the environment and use the system-installed Stockfish. If you encounter any issues, you can manually specify the Stockfish path:
+
+```bash
+export CHS_STOCKFISH_PATH=/data/data/com.termux/files/usr/bin/stockfish
+chs
 ```
 
 ### How to play
