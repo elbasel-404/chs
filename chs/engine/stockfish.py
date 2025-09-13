@@ -1,6 +1,36 @@
 import os
 import platform
 import math
+import asyncio
+import types
+
+# Fix for Python 3.11+ compatibility with older python-chess versions
+# The asyncio.coroutine decorator was removed in Python 3.11+
+if not hasattr(asyncio, 'coroutine'):
+    def coroutine(func):
+        """Compatibility wrapper for the removed asyncio.coroutine decorator"""
+        # Convert generator function to coroutine function
+        if asyncio.iscoroutinefunction(func):
+            return func
+        else:
+            # For generator functions, create a coroutine wrapper
+            async def wrapper(*args, **kwargs):
+                result = func(*args, **kwargs)
+                if hasattr(result, '__next__'):  # It's a generator
+                    # Convert generator to async generator behavior
+                    try:
+                        value = None
+                        while True:
+                            value = result.send(value)
+                            if hasattr(value, '__await__'):
+                                value = await value
+                    except StopIteration as e:
+                        return e.value if hasattr(e, 'value') else None
+                else:
+                    return result
+            return wrapper
+    asyncio.coroutine = coroutine
+
 import chess.engine
 from chs.utils.core import Levels
 
