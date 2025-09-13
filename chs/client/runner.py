@@ -1,6 +1,6 @@
 
 import chess
-import editdistance
+import editdistance_s as editdistance
 
 from chs.client.ending import GameOver
 from chs.engine.parser import FenParser
@@ -74,7 +74,7 @@ class Client(object):
 
   def closest_move(self, illegal_move):
     for move in self.moves():
-      distance = editdistance.eval(move, illegal_move)
+      distance = editdistance.distance(move, illegal_move)
       if distance <= 1:
         return move
     return None
