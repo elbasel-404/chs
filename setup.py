@@ -22,7 +22,7 @@ setup(
   packages = find_packages(),
   install_requires=[
     'python-chess',
-    'editdistance',
+    'editdistance-s',
   ],
   entry_points={
     'console_scripts': ['{} = chs.__main__:run'.format(name)],
