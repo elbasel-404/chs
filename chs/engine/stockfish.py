@@ -78,21 +78,26 @@ def get_engine_path():
     if system == 'Windows':
         engine_path = 'stockfish_10_x64_windows.exe'
     elif system == 'Linux':
-        if is_termux() or machine.startswith(('arm', 'aarch')):
-            # For Termux/ARM, system stockfish is strongly preferred
+        # Check for ARM64/aarch64 architecture
+        if machine in ('aarch64', 'arm64'):
+            # Use ARM64-optimized binary
+            engine_path = 'stockfish_16_aarch64_linux'
+        elif machine.startswith(('arm', 'armv7l', 'armv8l')):
+            # For other ARM variants, prefer system stockfish but fall back to ARM64 binary
             if system_stockfish:
                 return system_stockfish
-            # Fallback to generic Linux binary (may not work on ARM)
-            engine_path = 'stockfish_10_x64_linux'
+            # ARM64 binary might work on some ARM systems
+            engine_path = 'stockfish_16_aarch64_linux'
         else:
+            # Use x86-64 binary for x86_64 systems
             engine_path = 'stockfish_10_x64_linux'
     elif system == 'Darwin':  # macOS
         engine_path = 'stockfish_13_x64_mac'
     else:
-        # Unknown platform, try system stockfish
+        # Unknown platform, try system stockfish first
         if system_stockfish:
             return system_stockfish
-        # Last resort fallback
+        # Last resort fallback to x86-64 Linux binary
         engine_path = 'stockfish_10_x64_linux'
     
     bundled_path = os.path.join(file_path, engine_path)

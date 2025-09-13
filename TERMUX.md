@@ -52,6 +52,7 @@ CHS supports all Termux variants:
 #### ARM Architecture Support
 - Full support for `aarch64`, `armv7l`, `armv8l`, `arm64`
 - Automatic detection of ARM vs x86_64 environments
+- **Bundled ARM64 binary**: Native Stockfish 16 binary included for aarch64 systems
 - Optimized engine configuration for mobile processors
 
 ## Troubleshooting
@@ -152,7 +153,10 @@ The app detects Termux by checking:
 
 1. `CHS_STOCKFISH_PATH` environment variable (highest priority)
 2. System-installed stockfish (`pkg install stockfish`)
-3. Bundled binaries (fallback, may not work on ARM)
+3. Bundled binaries:
+   - ARM64/aarch64: Native Stockfish 16 binary (optimized for mobile)
+   - x86_64: Stockfish 10 binary
+   - Other architectures: Fallback attempts
 
 ### Error Handling
 
@@ -213,10 +217,10 @@ If you encounter Termux-specific issues, please report them with:
 
 | Device Type | ARM Version | Status | Notes |
 |-------------|-------------|--------|-------|
-| Android ARM64 | aarch64 | ✅ Full Support | Recommended |
-| Android ARM32 | armv7l | ✅ Full Support | Performance varies |
+| Android ARM64 | aarch64 | ✅ Full Support | Native bundled binary + system support |
+| Android ARM32 | armv7l | ✅ Full Support | Fallback to ARM64 binary or system |
 | Android x86 | i686 | ✅ Supported | Via bundled binaries |
-| Android x86_64 | x86_64 | ✅ Full Support | Good performance |
+| Android x86_64 | x86_64 | ✅ Full Support | Native bundled binary |
 
 ## See Also
 
