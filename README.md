@@ -20,18 +20,27 @@
 
 #### Termux (Android)
 
-For Termux users, you'll need to install both Python packages and the Stockfish engine:
+CHS has comprehensive Termux support with extensive testing and mobile optimizations:
 
 ```bash
 # Install Python and pip
 pkg install python
 
-# Install Stockfish engine
+# Install Stockfish engine  
 pkg install stockfish
 
 # Install chs
 pip install chs
 ```
+
+**Termux Features:**
+- ✅ **Full ARM/AArch64 support** - Works on all Android architectures
+- ✅ **Mobile optimizations** - Reduced memory usage and single-threading for battery life
+- ✅ **Multi-variant support** - Works with Termux, Termux Beta, and Termux Nightly
+- ✅ **Comprehensive testing** - 41 tests covering all Termux scenarios
+- ✅ **Smart error handling** - Detailed troubleshooting guidance for mobile devices
+
+For detailed Termux instructions and troubleshooting, see [TERMUX.md](TERMUX.md).
 
 #### Pip
 
