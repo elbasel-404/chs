@@ -3,6 +3,8 @@ import platform
 import math
 import asyncio
 import types
+import shutil
+import subprocess
 
 # Fix for Python 3.11+ compatibility with older python-chess versions
 # The asyncio.coroutine decorator was removed in Python 3.11+
@@ -35,19 +37,76 @@ import chess.engine
 from chs.utils.core import Levels
 
 
-file_path = os.path.dirname(os.path.abspath(__file__))
+def is_termux():
+    """Check if running in Termux environment"""
+    return os.path.exists('/data/data/com.termux') or 'com.termux' in os.environ.get('PREFIX', '')
 
-if 'Windows' in platform.system():
-  engine_path = 'stockfish_10_x64_windows.exe'
-elif 'Linux' in platform.system():
-  engine_path = 'stockfish_10_x64_linux'
-else:
-  engine_path = 'stockfish_13_x64_mac'
+def get_system_stockfish():
+    """Try to find system-installed stockfish"""
+    return shutil.which('stockfish')
+
+def get_engine_path():
+    """Get the appropriate Stockfish engine path based on platform"""
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    
+    # Allow environment variable override
+    env_engine = os.environ.get('CHS_STOCKFISH_PATH')
+    if env_engine and os.path.exists(env_engine):
+        return env_engine
+    
+    # Check for system stockfish first (better for Termux and other environments)
+    system_stockfish = get_system_stockfish()
+    if system_stockfish:
+        return system_stockfish
+    
+    # Platform-specific bundled binaries as fallback
+    system = platform.system()
+    machine = platform.machine()
+    
+    if system == 'Windows':
+        engine_path = 'stockfish_10_x64_windows.exe'
+    elif system == 'Linux':
+        if is_termux() or machine.startswith(('arm', 'aarch')):
+            # For Termux/ARM, prefer system stockfish
+            if system_stockfish:
+                return system_stockfish
+            # Fallback to generic Linux binary (may not work on ARM)
+            engine_path = 'stockfish_10_x64_linux'
+        else:
+            engine_path = 'stockfish_10_x64_linux'
+    elif system == 'Darwin':  # macOS
+        engine_path = 'stockfish_13_x64_mac'
+    else:
+        # Unknown platform, try system stockfish
+        if system_stockfish:
+            return system_stockfish
+        # Last resort fallback
+        engine_path = 'stockfish_10_x64_linux'
+    
+    bundled_path = os.path.join(file_path, engine_path)
+    if os.path.exists(bundled_path):
+        return bundled_path
+    
+    # If bundled binary doesn't exist, fall back to system stockfish
+    if system_stockfish:
+        return system_stockfish
+        
+    # If nothing works, return the expected path (will fail gracefully later)
+    return bundled_path
 
 class Engine(object):
   def __init__(self, level):
-    self.engine = chess.engine.SimpleEngine.popen_uci(os.path.join(file_path, engine_path))
-    self.engine.configure({'Skill Level': Levels.value(level)})
+    engine_path = get_engine_path()
+    try:
+      self.engine = chess.engine.SimpleEngine.popen_uci(engine_path)
+      self.engine.configure({'Skill Level': Levels.value(level)})
+    except Exception as e:
+      error_msg = f"Failed to start Stockfish engine at '{engine_path}'"
+      if is_termux():
+        error_msg += "\n\nFor Termux, please install Stockfish:\n  pkg install stockfish"
+      elif not get_system_stockfish():
+        error_msg += "\n\nPlease install Stockfish:\n  - Ubuntu/Debian: apt install stockfish\n  - Fedora: dnf install stockfish\n  - Arch: pacman -S stockfish\n  - macOS: brew install stockfish"
+      raise RuntimeError(error_msg) from e
 
   def play(self, board, time=1.500):
     return self.engine.play(board, chess.engine.Limit(time=time))
