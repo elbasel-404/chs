@@ -13,11 +13,11 @@ run:
 
 test:
 	$(call pprintf,Running tests for project)
-	python3 -m "nose"
+	python3 -m unittest discover tests
 
 test-nocapture:
 	$(call pprintf,Running tests for project)
-	python3 -m "nose" --nocapture
+	python3 -m unittest discover tests -v
 
 build:
 	$(call pprintf,Building project)

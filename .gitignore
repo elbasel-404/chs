@@ -4,6 +4,10 @@ build/
 *.spec
 *.egg-info
 
+# Python compiled files
+*.pyc
+*.pyo
+__pycache__/
+
 # Others
-__pycache__
 .DS_Store
