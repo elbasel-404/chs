@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-import chess
 import sys
 import os
 from chs.utils.core import Colors, Levels
-from chs.client.runner import Client
 
 
 def get_version():
@@ -41,6 +39,17 @@ def get_level_from_args(args):
   return Levels.ONE
 
 def get_player_from_args(args):
+  # Import chess only when needed for game play
+  try:
+    import chess
+  except ImportError:
+    print("Error: Missing required dependency 'python-chess'.", file=sys.stderr)
+    print("Please install dependencies with:", file=sys.stderr)
+    print("  pip install -r requirements.txt", file=sys.stderr)
+    print("Or install the package with:", file=sys.stderr)
+    print("  pip install python-chess", file=sys.stderr)
+    raise ImportError("Missing required dependency 'python-chess'. Please install with: pip install python-chess")
+  
   player = [arg for arg in args if "--play-black" in arg]
   if player:
     return chess.BLACK
@@ -75,6 +84,18 @@ def main():
   elif len(sys.argv) > 1 and is_version_command(sys.argv[1]):
     print('Running chs {}v{}{}\n'.format(Colors.BOLD, get_version(), Colors.RESET))
   else:
+    # Import chess and Client only when starting a game
+    try:
+      import chess
+      from chs.client.runner import Client
+    except ImportError:
+      print("Error: Missing required dependency 'python-chess'.", file=sys.stderr)
+      print("Please install dependencies with:", file=sys.stderr)
+      print("  pip install -r requirements.txt", file=sys.stderr)
+      print("Or install the package with:", file=sys.stderr)
+      print("  pip install python-chess", file=sys.stderr)
+      return
+      
     try:
       level = get_level_from_args(sys.argv)
       play_as = get_player_from_args(sys.argv)

@@ -13,13 +13,19 @@ class TestAsyncioCoroutineFix(unittest.TestCase):
     
     def test_asyncio_coroutine_import(self):
         """Test that asyncio.coroutine is available after our compatibility fix."""
-        # Import our stockfish module which contains the compatibility fix
-        from chs.engine import stockfish
-        import asyncio
-        
-        # Verify that asyncio.coroutine is now available
-        self.assertTrue(hasattr(asyncio, 'coroutine'), 
-                       "asyncio.coroutine should be available after compatibility fix")
+        try:
+            # Import our stockfish module which contains the compatibility fix
+            from chs.engine import stockfish
+            import asyncio
+            
+            # Verify that asyncio.coroutine is now available
+            self.assertTrue(hasattr(asyncio, 'coroutine'), 
+                           "asyncio.coroutine should be available after compatibility fix")
+        except ImportError as e:
+            if "python-chess" in str(e):
+                self.skipTest("python-chess not available")
+            else:
+                raise
         
     def test_chess_engine_import(self):
         """Test that chess.engine can be imported without AttributeError."""
