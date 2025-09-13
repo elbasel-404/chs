@@ -33,7 +33,17 @@ if not hasattr(asyncio, 'coroutine'):
             return wrapper
     asyncio.coroutine = coroutine
 
-import chess.engine
+try:
+    import chess.engine
+except ImportError:
+    import sys
+    print("Error: Missing required dependency 'python-chess'.", file=sys.stderr)
+    print("Please install dependencies with:", file=sys.stderr)
+    print("  pip install -r requirements.txt", file=sys.stderr)
+    print("Or install the package with:", file=sys.stderr)
+    print("  pip install python-chess", file=sys.stderr)
+    raise ImportError("Missing required dependency 'python-chess'. Please install with: pip install python-chess")
+
 from chs.utils.core import Levels
 
 
