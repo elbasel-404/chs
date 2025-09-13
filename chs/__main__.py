@@ -66,6 +66,12 @@ def main():
     print('  back  Take back your last move')
     print('  hint  Get a hint from the engine')
     print('')
+    print('Environment Variables:')
+    print('  CHS_STOCKFISH_PATH   Override Stockfish engine path')
+    print('')
+    print('For Termux users: Install with "pkg install stockfish && pip install chs"')
+    print('See TERMUX.md for detailed Termux installation and usage instructions.')
+    print('')
   elif len(sys.argv) > 1 and is_version_command(sys.argv[1]):
     print('Running chs {}v{}{}\n'.format(Colors.BOLD, get_version(), Colors.RESET))
   else:
