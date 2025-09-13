@@ -4,6 +4,17 @@ build/
 *.spec
 *.egg-info
 
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage reports
+coverage/
+
 # Others
 __pycache__
 .DS_Store
+*.pyc

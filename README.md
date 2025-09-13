@@ -4,12 +4,15 @@
 
 <img src="https://travis-ci.org/nickzuber/chs.svg?branch=master" /> <img src="https://img.shields.io/badge/project-active-brightgreen.svg" /> <img src="https://img.shields.io/badge/status-stable-brightgreen.svg" /> <img src="https://img.shields.io/pypi/dm/chs.svg?color=yellow" /> <img src="https://img.shields.io/pypi/format/chs.svg" /> <img src="https://img.shields.io/badge/state-released-brightgreen.svg" /> <img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" />
 
+**Now rewritten in TypeScript with enhanced aarch64 compatibility!**
+
 <img src="https://user-images.githubusercontent.com/10540865/119232802-80c34700-baf4-11eb-9fed-af558575ae4e.png" />
 
 ### Table of Contents
 
 - [Installation](#installation)
-  - [Pip](#pip)
+  - [NPM](#npm)
+  - [Pip (Legacy Python Version)](#pip)
   - [Arch Linux](#arch-linux)
 - [Usage](#usage)
   - [How to start playing](#how-to-start-playing)
@@ -18,33 +21,55 @@
 
 ## Installation
 
+#### NPM (Recommended - TypeScript Version)
+
+This package is now available as a TypeScript/Node.js application via NPM with enhanced aarch64 support:
+
+```bash
+# Install globally
+npm install -g chs
+
+# Or run without installing
+npx chs
+```
+
+**Requirements:**
+- Node.js 16+ (has excellent aarch64/ARM64 support)
+- Stockfish chess engine (automatically detected or install separately)
+
+**Install Stockfish:**
+- **Ubuntu/Debian**: `sudo apt install stockfish`
+- **Fedora**: `sudo dnf install stockfish`  
+- **Arch Linux**: `sudo pacman -S stockfish`
+- **macOS**: `brew install stockfish`
+
 #### Termux (Android)
 
 CHS has comprehensive Termux support with extensive testing and mobile optimizations:
 
 ```bash
-# Install Python and pip
-pkg install python
+# Install Node.js and npm
+pkg install nodejs
 
 # Install Stockfish engine  
 pkg install stockfish
 
 # Install chs
-pip install chs
+npm install -g chs
 ```
 
 **Termux Features:**
 - ✅ **Full ARM/AArch64 support** - Works on all Android architectures
-- ✅ **Mobile optimizations** - Reduced memory usage and single-threading for battery life
+- ✅ **Mobile optimizations** - Reduced memory usage and single-threading for battery life  
 - ✅ **Multi-variant support** - Works with Termux, Termux Beta, and Termux Nightly
-- ✅ **Comprehensive testing** - 41 tests covering all Termux scenarios
+- ✅ **TypeScript reliability** - Enhanced type safety and modern JavaScript features
 - ✅ **Smart error handling** - Detailed troubleshooting guidance for mobile devices
 
 For detailed Termux instructions and troubleshooting, see [TERMUX.md](TERMUX.md).
 
-#### Pip
+#### Pip (Legacy Python Version)
 
-This package is available via PyPi.
+The original Python version is still available via PyPi:
 
 ```
 $ python3 -m pip install chs
@@ -77,7 +102,7 @@ $ chs
 To see all possible options, use the help command.
 
 ```
-$ chs help
+$ chs --help
 ```
 
 To play as the black pieces, use the `--play-black` flag.
@@ -89,7 +114,7 @@ $ chs --play-black
 You can also specify the level of the engine if you want to tweak the difficulty.
 
 ```
-$ chs --level=8
+$ chs --level 8
 ```
 
 #### Termux-specific Usage
